@@ -1,6 +1,6 @@
 package com.emibap.textureAtlas
 {
-	
+
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
@@ -12,8 +12,9 @@ package com.emibap.textureAtlas
 	import flash.text.Font;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
-	import starling.text.BitmapFont;
-	
+    import flash.utils.getQualifiedClassName;
+
+    import starling.text.BitmapFont;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	import starling.text.TextField;
@@ -243,6 +244,34 @@ package com.emibap.textureAtlas
 		}
 		
 		// Public methods
+
+        /**
+         * This method takes a vector of MovieClip class and converts it into a Texture Atlas.
+		 *
+         * @param	assets:Vector.<Class> - The MovieClips class you wish to convert into a TextureAtlas. Must contain classes whose instances are of type MovieClip that will be rasterized and become the subtextures of your Atlas.
+         * @param	scaleFactor:Number - The scaling factor to apply to every object. Default value is 1 (no scaling).
+         * @param	margin:uint - The amount of pixels that should be used as the resulting image margin (for each side of the image). Default value is 0 (no margin).
+         * @param	preserveColor:Boolean - A Flag which indicates if the color transforms should be captured or not. Default value is true (capture color transform).
+         * @return  TextureAtlas - The dynamically generated Texture Atlas.
+         * @return
+         */
+        static public function fromClassVector(assets:Vector.<Class>, scaleFactor:Number = 1, margin:uint=0, preserveColor:Boolean = true):TextureAtlas
+        {
+            var container:MovieClip = new MovieClip();
+            for each (var assetClass:Class in assets) {
+                var assetInstance:MovieClip = new assetClass();
+                assetInstance.name = getQualifiedClassName(assetClass);
+                container.addChild(assetInstance);
+            }
+            return fromMovieClipContainer(container, scaleFactor, margin, preserveColor);
+        }
+
+        /** Retrieves all textures for a class. Returns <code>null</code> if it is not found.
+         * This method can be used if TextureAtlass doesn't support classes.
+         */
+        public function getTexturesByClass(textureAtlas:TextureAtlas, assetClass:Class):Vector.<Texture> {
+            return textureAtlas.getTextures(getQualifiedClassName(assetClass));
+        }
 		
 		/**
 		 * This method will take a MovieClip sprite sheet (containing other display objects) and convert it into a Texture Atlas.
