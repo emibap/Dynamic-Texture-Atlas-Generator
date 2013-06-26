@@ -199,6 +199,7 @@ package com.emibap.textureAtlas
 				
 				tmpBData = new BitmapData(realBounds.width, realBounds.height, false);
 				filterRect = tmpBData.generateFilterRect(tmpBData.rect, clipFilters[j]);
+				realBounds = realBounds.union(filterRect);
 				tmpBData.dispose();
 				
 				while (++j < clipFiltersLength)
