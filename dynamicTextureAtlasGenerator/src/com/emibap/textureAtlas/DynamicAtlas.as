@@ -99,7 +99,8 @@ package com.emibap.textureAtlas
 	
 	public class DynamicAtlas
 	{
-		static protected const DEFAULT_CANVAS_WIDTH:Number = 640;
+		static protected const DEFAULT_CANVAS_WIDTH:Number = 2048;
+		static public var canvasWidth:Number = DEFAULT_CANVAS_WIDTH;
 		
 		static protected var _items:Array;
 		static protected var _canvas:Sprite;
@@ -145,7 +146,8 @@ package com.emibap.textureAtlas
 			for (var i:uint = 0; i < len; i++)
 			{
 				itm = _items[i];
-				if ((xPos + itm.width) > DEFAULT_CANVAS_WIDTH)
+				
+				if ((xPos + itm.width) > canvasWidth)
 				{
 					xPos = 0;
 					yPos += maxY;
@@ -279,7 +281,8 @@ package com.emibap.textureAtlas
          */
         static public function fromClassVector(assets:Vector.<Class>, scaleFactor:Number = 1, margin:uint=0, preserveColor:Boolean = true, checkBounds:Boolean=false):TextureAtlas
         {
-            var container:MovieClip = new MovieClip();
+           
+			var container:MovieClip = new MovieClip();
             for each (var assetClass:Class in assets) {
                 var assetInstance:DisplayObject = new assetClass();
                 assetInstance.name = getQualifiedClassName(assetClass);
@@ -565,7 +568,8 @@ package com.emibap.textureAtlas
 			xml.appendChild(charsNode);
 			
 			texture = Texture.fromBitmapData(canvasData);
-			TextField.registerBitmapFont(new BitmapFont(texture, xml));
+			//TextField.registerBitmapFont(new BitmapFont(texture, xml));
+			TextField.registerCompositor(new BitmapFont(texture, xml), fontCustomID || fontFamily);
 			
 			_items.length = 0;
 			_canvas.removeChildren();
