@@ -7,6 +7,7 @@ package com.emibap.textureAtlas
 	import flash.display.Sprite;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.text.AntiAliasType;
 	import flash.text.Font;
@@ -100,7 +101,7 @@ package com.emibap.textureAtlas
 	public class DynamicAtlas
 	{
 		static protected const DEFAULT_CANVAS_WIDTH:Number = 2048;
-		static public var canvasWidth:Number = DEFAULT_CANVAS_WIDTH;
+		static protected var canvasWidth:Number = DEFAULT_CANVAS_WIDTH;
 		
 		static protected var _items:Array;
 		static protected var _canvas:Sprite;
@@ -114,6 +115,8 @@ package com.emibap.textureAtlas
 		static protected var _mat:Matrix;
 		static protected var _margin:Number;
 		static protected var _preserveColor:Boolean;
+		
+		static protected var pivots:Object = {};
 		
 		// Will not be used - Only using one static method
 		public function DynamicAtlas()
@@ -269,6 +272,23 @@ package com.emibap.textureAtlas
 		
 		// Public methods
 
+		/**
+		 * This method allow to change the width of the textures atlases
+		 * @param	width:Number - The new width of the canvas
+		 */
+		static public function setCanvasWidth (width:int):void {
+			canvasWidth = width;
+		}
+		
+		/**
+		 * This method return the pivot of the Symbol used to create the Atlas
+		 * @param	name name of the asset
+		 * @return	the pivot point
+		 */
+		static public function getPivot(name:String):Point {
+			return pivots[name];
+		}
+		
         /**
          * This method takes a vector of DisplayObject class and converts it into a Texture Atlas.
 		 *
@@ -392,6 +412,9 @@ package com.emibap.textureAtlas
 							MovieClip(selected).gotoAndStop(m);
 							frameBounds = frameBounds.union(getRealBounds(selected));
 						}
+						
+						pivots[selected.name] = new Point ( -frameBounds.x+margin, -frameBounds.y+margin);
+						
 					}
 				}
 				else selectedTotalFrames = 1;
