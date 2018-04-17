@@ -360,7 +360,12 @@ package com.emibap.textureAtlas
 
             if(swf is MovieClip)
                 MovieClip(swf).gotoAndStop(1);
-
+				
+			var scales:Vector.<Point>;
+			
+			if (scaleFactor != 1)
+				scales = new Vector.<Point>(children, true);
+				
 			for (var i:uint = 0; i < children; i++)
 			{
 				selected = swf.getChildAt(i);
@@ -368,9 +373,11 @@ package com.emibap.textureAtlas
 				_x = selected.x;
 				_y = selected.y;
 				
+				
 				// Scaling if needed (including filters)
 				if (scaleFactor != 1)
 				{
+					scales[i] = new Point(selected.scaleX, selected.scaleY);
 					
 					selected.scaleX *= scaleFactor;
 					selected.scaleY *= scaleFactor;
@@ -473,6 +480,17 @@ package com.emibap.textureAtlas
 			_canvas = null;
 			_currentLab = null;
 			//_x = _y = _margin = null;
+			
+			if (scaleFactor != 1){
+				var scale:Point;
+				
+				for (i = 0; i < children; i++){
+					scale = scales[i];
+					selected = swf.getChildAt(i);
+					selected.scaleX = scale.x;
+					selected.scaleY = scale.y;
+				}	
+			}
 			
 			return atlas;
 		}
